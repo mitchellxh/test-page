@@ -26,15 +26,18 @@ git clone https://github.com/mitchellxh/test-page.git
 cd test-page
 ```
 
-### Step 2: Add the Template Files
+### Step 2: View the files from the command line
 
-Copy these files into your test-page folder:
-- index.html
-- style.css
-- script.js
-- README.md
+```bash
+# List the contents
+ls -l
 
-Your instructor will provide these files or you can create them from the templates provided.
+# open the instructions.md file in the command line
+cat instructions.md
+
+# use any text editor to open this file 
+# OR open in a browser https://github.com/mitchellxh/test-page > instructions.md
+```
 
 ---
 
@@ -55,67 +58,72 @@ To verify your settings worked:
 ```bash
 git config --global --list
 ```
+Use 'q' to get back to the command line.
 
 ### Step 4: Create SSH Keys for GitHub
 
 SSH keys are like a special password that connects your computer to GitHub securely.
 
-#### 4.1: Check if you already have SSH keys
+#### 4.1: Navigate to SSH directory
 
 ```bash
-ls -la ~/.ssh
+cd ~/.ssh
 ```
 
-If you see files named `id_rsa.pub` or `id_ed25519.pub`, you already have keys! Skip to step 4.3.
-
-#### 4.2: Generate new SSH keys (if needed)
+#### 4.2: Generate your SSH key for this class
 
 ```bash
-ssh-keygen -t ed25519 -C "your.email@example.com"
+ssh-keygen -t ed25519 -C "github class key" -f github_class
 ```
 
-When prompted:
-- Press Enter to accept the default file location
-- Press Enter twice to skip setting a passphrase (or set one if you prefer)
+When prompted for a passphrase:
+- Press Enter twice to skip (no passphrase)
 
-#### 4.3: Start the SSH agent
+**Note:** We're using `github_class` as the filename so it doesn't conflict with any existing SSH keys you might have!
+
+#### 4.3: Verify your keys were created
 
 ```bash
-eval "$(ssh-agent -s)"
+ls -la github_class*
 ```
 
-#### 4.4: Add your SSH key to the agent
+You should see two files:
+- `github_class` (private key - NEVER share this!)
+- `github_class.pub` (public key - this goes to GitHub)
+
+#### 4.4: Display your public key
 
 ```bash
-ssh-add ~/.ssh/id_ed25519
+cat github_class.pub
 ```
 
-#### 4.5: Copy your public key
-
-**On Linux/Mac:**
-```bash
-cat ~/.ssh/id_ed25519.pub
-```
-
-**On Windows (Git Bash):**
-```bash
-cat ~/.ssh/id_ed25519.pub | clip
-```
-
-This will display (or copy) a long string starting with `ssh-ed25519`. Select and copy ALL of it.
+This will show a long string starting with `ssh-ed25519`. Select and copy ALL of it (typically Ctrl+Shift+C).
 
 ### Step 5: Add SSH Key to GitHub
 
-1. Go to GitHub.com and log in
-2. Click your profile picture (top right) → Settings
-3. In the left sidebar, click "SSH and GPG keys"
-4. Click the green "New SSH key" button
-5. Give it a title (like "My Laptop" or "School Computer")
-6. Paste your SSH key into the "Key" field
+1. Log in to your GitHub account
+2. Click your profile picture → Settings
+3. Click "SSH and GPG keys" (left sidebar)
+4. Click "New SSH key" (green button)
+5. Title: Name of your computer (e.g., "Windows Laptop", "School Computer")
+6. Key: Paste the entire contents from the .pub file
 7. Click "Add SSH key"
 8. You may need to enter your GitHub password to confirm
 
-### Step 6: Test Your Connection
+### Step 6: Configure SSH to Use Your Class Key
+
+Since we used a custom name, we need to tell SSH to use this key for GitHub. This is all a single command, press enter/return to get a new line:
+
+```bash
+echo "Host github.com
+  HostName github.com
+  User git
+  IdentityFile ~/.ssh/github_class" >> ~/.ssh/config
+```
+
+This creates (or adds to) your SSH config file.
+
+### Step 7: Test Your Connection
 
 ```bash
 ssh -T git@github.com
@@ -127,16 +135,20 @@ If you see a warning about authenticity, type `yes` and press Enter.
 
 ---
 
+###################################
+## BREAK
+###################################
+
 ## Part 3: Working with Your Repository 📝
 
-### Step 7: Make Your First Changes
+### Step 8: Make Your First Changes
 
 1. Open the `index.html` file in your text editor
 2. Find the line that says `YOUR_USERNAME` and replace it with your GitHub username
 3. Change the heading "Welcome to My GitHub Page!" to something personal
 4. Save the file
 
-### Step 8: Check What Changed
+### Step 9: Check What Changed
 
 ```bash
 git status
@@ -144,7 +156,7 @@ git status
 
 You should see your modified files listed in red.
 
-### Step 9: Stage Your Changes
+### Step 10: Stage Your Changes
 
 ```bash
 # Add all changed files
@@ -161,13 +173,13 @@ git status
 
 Files should now appear in green!
 
-### Step 10: Commit Your Changes
+### Step 11: Commit Your Changes
 
 ```bash
 git commit -m "Personalize my GitHub page"
 ```
 
-### Step 11: Connect to YOUR GitHub Repository
+### Step 12: Connect to YOUR GitHub Repository
 
 First, create a new repository on GitHub:
 1. Go to GitHub.com
@@ -180,6 +192,9 @@ First, create a new repository on GitHub:
 Now connect your local folder to GitHub:
 
 ```bash
+# Check the current remote
+git remote -v
+
 # Remove the old remote (if cloned from template)
 git remote remove origin
 
@@ -190,7 +205,7 @@ git remote add origin git@github.com:YOUR_USERNAME/my-first-website.git
 git remote -v
 ```
 
-### Step 12: Push Your Code to GitHub
+### Step 13: Push Your Code to GitHub
 
 ```bash
 # Push to GitHub (first time)
@@ -209,7 +224,7 @@ git push -u origin main
 
 ## Part 4: Enable GitHub Pages 🌐
 
-### Step 13: Turn on GitHub Pages
+### Step 14: Turn on GitHub Pages
 
 1. Go to your repository on GitHub.com
 2. Click "Settings" (in the repository navigation)
@@ -219,9 +234,10 @@ git push -u origin main
 6. Leave folder as "/ (root)"
 7. Click "Save"
 
-### Step 14: View Your Live Website!
+### Step 15: View Your Live Website!
 
-After 2-5 minutes, your site will be live at:
+1. Click the "Actions" tab to watch the page get built.
+2. After 2-5 minutes, your site will be live at:
 
 ```
 https://YOUR_USERNAME.github.io/my-first-website/
@@ -233,7 +249,7 @@ Replace YOUR_USERNAME with your actual GitHub username!
 
 ## Part 5: Making More Changes 🔄
 
-### Step 15: The Git Workflow
+### Step 16: The Git Workflow
 
 Whenever you want to make changes:
 
